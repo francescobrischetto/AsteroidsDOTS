@@ -9,11 +9,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 28194131461653021}
+  - component: {fileID: 28194131461653017}
   - component: {fileID: 28194131461653022}
   - component: {fileID: 28194131461653023}
   - component: {fileID: 28194131461653020}
   - component: {fileID: 28194131461652994}
-  - component: {fileID: 28194131461653017}
+  - component: {fileID: 2948461186455459313}
+  - component: {fileID: 1728220503031401138}
+  - component: {fileID: 674763638977140545}
   m_Layer: 0
   m_Name: Ship
   m_TagString: Untagged
@@ -36,6 +39,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &28194131461653017
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 28194131461652995}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.001431793, y: 0.000000014901161}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.29270613, y: 0.43874654}
+  m_EdgeRadius: 0
 --- !u!114 &28194131461653022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,32 +124,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TurnCommand: 0
   ThrustCommand: 0
---- !u!61 &28194131461653017
-BoxCollider2D:
+--- !u!114 &2948461186455459313
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 28194131461652995}
   m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.001431793, y: 0.000000014901161}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.29270613, y: 0.43874654}
-  m_EdgeRadius: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f598413bc4a6e846b330eea70084f0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FireRate: 0.3
+  ProjectileSpeed: 15
+  ProjectileEntity: {fileID: 3389020302516124100, guid: 13369a1b76a9e144cb92420377e11348, type: 3}
+--- !u!114 &1728220503031401138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 28194131461652995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe1103383b0b94a43ac1d0b8f24f5509, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShootCommand: 0
+--- !u!114 &674763638977140545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 28194131461652995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c38b2d1a6fef24647b0680b793abda13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FireTimer: 0
+  IsShooting: 0
 --- !u!1 &28194131726973433
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,14 +14,15 @@ namespace Systems
             var array = GetEntityQuery(typeof(InputDataComponent)).ToComponentDataArray<InputDataComponent>(Allocator.TempJob);
             var inputData = array[0];
             
-            Entities.WithAll<PlayerTagComponent>().ForEach((ref MovementCmdComponent movCmd) =>
+            Entities.WithAll<PlayerTagComponent>().ForEach((ref MovementCmdComponent movCmd, ref ShootCmdComponent shotCmd) =>
             {
                 // movement input command mapping
                 var turnLeft = inputData.InputArrowLeft ? 1 : 0; 
                 var turnRight = inputData.InputArrowRight ? 1 : 0;
                 movCmd.TurnCommand = turnLeft - turnRight;
                 movCmd.ThrustCommand = inputData.InputArrowUp ? 1 : 0;
-                
+                // shoot input command mapping
+                shotCmd.ShootCommand = inputData.InputAction;
             }).ScheduleParallel();
 
             array.Dispose();
