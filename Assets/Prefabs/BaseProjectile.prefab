@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5271339351479779842}
   - component: {fileID: 7423975663470592195}
   - component: {fileID: -9044879557162008886}
+  - component: {fileID: 633712310484883316}
   m_Layer: 0
   m_Name: BaseProjectile
   m_TagString: Untagged
@@ -158,3 +159,20 @@ MonoBehaviour:
     z: 0
   CurrentAcceleration: 0
   CurrentTurnAngle: 0
+  PreviousPosition:
+    x: 0
+    y: 0
+    z: 0
+--- !u!114 &633712310484883316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3389020302516124100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffaedaf9cf4278944ab7c890b99a4d76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 5874979993353096577}

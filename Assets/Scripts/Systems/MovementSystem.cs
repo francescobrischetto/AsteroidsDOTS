@@ -14,6 +14,7 @@ namespace Systems
             
             Entities.ForEach((ref Translation translation, ref Rotation rotation, ref MovementDataComponent movData, in MovementStatsComponent movStats) =>
             {
+                movData.PreviousPosition = translation.Value;
                 // Calculate the rotation delta
                 float angle = movData.CurrentTurnAngle * deltaTime;
                 quaternion rotationDelta = quaternion.RotateZ(angle);

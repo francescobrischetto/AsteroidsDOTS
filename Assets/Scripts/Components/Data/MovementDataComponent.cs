@@ -9,5 +9,6 @@ namespace Components.Data
         public float3 CurrentVelocity;
         public float CurrentAcceleration;
         public float CurrentTurnAngle;
+        public float3 PreviousPosition;
     }
 }
