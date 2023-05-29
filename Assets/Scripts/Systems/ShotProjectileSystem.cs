@@ -36,7 +36,7 @@ namespace Systems
                 ecb.SetComponent(entityInQueryIndex, newProjectile, new Rotation { Value = rotation.Value });
                 ecb.SetComponent(entityInQueryIndex, newProjectile, new MovementDataComponent
                 {
-                    CurrentVelocity = math.mul(rotation.Value, new float3(0f, 1f, 0f)) * weaponStats.ProjectileSpeed + movData.CurrentVelocity
+                    CurrentVelocity = math.mul(rotation.Value, weaponData.ShootDirection * weaponStats.ProjectileSpeed)
                 }) ;
 
             }).ScheduleParallel();

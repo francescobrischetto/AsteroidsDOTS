@@ -2,13 +2,14 @@ using Components;
 using Components.Commands;
 using Components.Data;
 using Components.Tags;
+using Systems.Commands;
 using Unity.Collections;
 using Unity.Entities;
 
 namespace Systems
 {
-    [UpdateAfter(typeof(InputSystem))]
-    public class PlayerControlSystem : SystemBase
+    [UpdateBefore(typeof(MovementCmdSystem))]
+    public class PlayerControllerSystem : SystemBase
     {
         protected override void OnUpdate()
         {

@@ -117,9 +117,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 949e5e40b49d4c0ca2eeb77adea14e74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MovementFriction: 1
-  Acceleration: 10
-  TurnRate: 8
+  MovementFriction: 0.2
+  Acceleration: 4
+  TurnRate: 6
 --- !u!114 &28194131461653020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,6 +197,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FireTimer: 0
+  ShootDirection:
+    x: 0
+    y: 1
+    z: 0
   IsShooting: 0
 --- !u!114 &290375436
 MonoBehaviour:
@@ -312,8 +316,8 @@ MonoBehaviour:
         Category00: 0
         Category01: 1
         Category02: 0
-        Category03: 0
-        Category04: 0
+        Category03: 1
+        Category04: 1
         Category05: 0
         Category06: 0
         Category07: 0

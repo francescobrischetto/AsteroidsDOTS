@@ -7,7 +7,6 @@ using Unity.Transforms;
 
 namespace Systems
 {
-    [UpdateAfter(typeof(MovementCmdSystem))]
     public class MovementSystem : SystemBase
     {
         protected override void OnUpdate()

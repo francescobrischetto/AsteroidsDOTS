@@ -5,7 +5,7 @@ using Unity.Entities;
 
 namespace Systems.Commands
 {
-    [UpdateAfter(typeof(PlayerControlSystem))]
+    [UpdateBefore(typeof(MovementSystem))]
     public class MovementCmdSystem : SystemBase
     {
         protected override void OnUpdate()

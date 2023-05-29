@@ -15,9 +15,9 @@ MonoBehaviour:
   m_CategoryNames:
   - Ship
   - Asteroids
-  - Bullets
-  - 
-  - 
+  - Player Bullets
+  - Ufos
+  - Enemy Bullets
   - 
   - 
   - 
