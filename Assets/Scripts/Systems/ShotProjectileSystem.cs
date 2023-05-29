@@ -23,7 +23,7 @@ namespace Systems
             var ecb = _endSimulationECBS.CreateCommandBuffer().AsParallelWriter();
 
             Entities.ForEach((Entity entity, int entityInQueryIndex
-                , ref WeaponDataComponent weaponData, in WeaponStatsComponent weaponStats, in Translation translation, in Rotation rotation) =>
+                , ref WeaponDataComponent weaponData, in MovementDataComponent movData, in WeaponStatsComponent weaponStats, in Translation translation, in Rotation rotation) =>
             {
                 weaponData.FireTimer += deltaTime;
                 
@@ -36,8 +36,8 @@ namespace Systems
                 ecb.SetComponent(entityInQueryIndex, newProjectile, new Rotation { Value = rotation.Value });
                 ecb.SetComponent(entityInQueryIndex, newProjectile, new MovementDataComponent
                 {
-                    CurrentVelocity = math.mul(rotation.Value, new float3(0f, 1f, 0f)) * weaponStats.ProjectileSpeed
-                });
+                    CurrentVelocity = math.mul(rotation.Value, new float3(0f, 1f, 0f)) * weaponStats.ProjectileSpeed + movData.CurrentVelocity
+                }) ;
 
             }).ScheduleParallel();
             

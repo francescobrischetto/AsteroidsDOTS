@@ -3,7 +3,7 @@ using Unity.Entities;
 namespace Components.Tags
 {
     [GenerateAuthoringComponent]
-    public struct ProjectileTageComponent : IComponentData
+    public struct ProjectileTagComponent : IComponentData
     {
     }
 }

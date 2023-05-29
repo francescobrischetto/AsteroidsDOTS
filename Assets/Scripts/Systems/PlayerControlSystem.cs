@@ -7,6 +7,7 @@ using Unity.Entities;
 
 namespace Systems
 {
+    [UpdateAfter(typeof(InputSystem))]
     public class PlayerControlSystem : SystemBase
     {
         protected override void OnUpdate()

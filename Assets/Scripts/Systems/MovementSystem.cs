@@ -1,11 +1,13 @@
 using Components.Data;
 using Components.Stats;
+using Systems.Commands;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
 namespace Systems
 {
+    [UpdateAfter(typeof(MovementCmdSystem))]
     public class MovementSystem : SystemBase
     {
         protected override void OnUpdate()

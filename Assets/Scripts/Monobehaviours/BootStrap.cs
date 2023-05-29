@@ -1,4 +1,3 @@
-using Components;
 using Components.Data;
 using Unity.Entities;
 using UnityEngine;
@@ -16,7 +15,13 @@ namespace Monobehaviours
 
         private void Start()
         {
+            Entity entity = _entityManager.CreateEntity(typeof(RandomDataComponent));
+            _entityManager.SetComponentData(entity, new RandomDataComponent
+            {
+                Random = new Unity.Mathematics.Random((uint)(Time.realtimeSinceStartup * 100))
+            }) ;
             _entityManager.CreateEntity(typeof(InputDataComponent));
+            
         }
     }
 }

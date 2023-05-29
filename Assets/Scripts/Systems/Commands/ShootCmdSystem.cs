@@ -4,6 +4,7 @@ using Unity.Entities;
 
 namespace Systems.Commands
 {
+    [UpdateAfter(typeof(PlayerControlSystem))]
     public class ShootCmdSystem : SystemBase
     {
         protected override void OnUpdate()
