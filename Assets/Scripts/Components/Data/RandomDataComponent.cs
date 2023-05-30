@@ -1,10 +1,11 @@
 using Unity.Entities;
-using Unity.Mathematics;
+using Random = Unity.Mathematics.Random;
 
 namespace Components.Data
 {
+    [GenerateAuthoringComponent]
     public struct RandomDataComponent : IComponentData
     {
-        public Unity.Mathematics.Random Random;
+        public Random Random;
     }
 }

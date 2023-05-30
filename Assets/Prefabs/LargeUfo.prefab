@@ -22,8 +22,9 @@ GameObject:
   - component: {fileID: 8820596588399754761}
   - component: {fileID: 8820596588399754775}
   - component: {fileID: 8820596588399754774}
+  - component: {fileID: -3791633471417860483}
   m_Layer: 0
-  m_Name: Ufo
+  m_Name: LargeUfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37,8 +38,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8820596588399754756}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: -2.74, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -107,7 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MovementFriction: 0.5
-  Acceleration: 2
+  Acceleration: 3
   TurnRate: 270
 --- !u!114 &8820596588399754752
 MonoBehaviour:
@@ -367,8 +368,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f598413bc4a6e846b330eea70084f0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FireRate: 1
-  ProjectileSpeed: 10
+  FireRate: 1.5
+  ProjectileSpeed: 17
   ProjectileEntity: {fileID: 3389020302516124100, guid: 288649d7b583c4b4682cba343dbb00d1, type: 3}
 --- !u!114 &8820596588399754762
 MonoBehaviour:
@@ -437,3 +438,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba20d0f0b76f970468f2d802d7bd1067, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-3791633471417860483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8820596588399754756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 476f2657e62faba4182776a936c9bf6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Random:
+    state: 0

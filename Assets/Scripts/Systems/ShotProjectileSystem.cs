@@ -33,7 +33,7 @@ namespace Systems
                 Entity newProjectile = ecb.Instantiate(entityInQueryIndex, weaponStats.ProjectileEntity);
 
                 ecb.SetComponent(entityInQueryIndex, newProjectile, new Translation { Value = translation.Value });
-                ecb.SetComponent(entityInQueryIndex, newProjectile, new Rotation { Value = rotation.Value });
+                ecb.SetComponent(entityInQueryIndex, newProjectile, new Rotation { Value = math.mul(rotation.Value, quaternion.Euler(weaponData.ShootDirection)) });
                 ecb.SetComponent(entityInQueryIndex, newProjectile, new MovementDataComponent
                 {
                     CurrentVelocity = math.mul(rotation.Value, weaponData.ShootDirection * weaponStats.ProjectileSpeed)

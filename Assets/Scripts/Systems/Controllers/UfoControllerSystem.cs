@@ -14,15 +14,14 @@ namespace Systems
         protected override void OnUpdate()
         {
             var deltaTime = Time.DeltaTime;
-            var random = GetSingleton<RandomDataComponent>();
-
 
             Entities.WithAll<UfoTagComponent>().ForEach((ref MovementCmdComponent movCmd, 
-                ref ShootCmdComponent shotCmd, ref UfoIADataComponent ufoIA, ref WeaponDataComponent weaponData) =>
+                ref ShootCmdComponent shotCmd, ref UfoIADataComponent ufoIA, ref WeaponDataComponent weaponData, 
+                ref RandomDataComponent  random) =>
             {
                 movCmd.TurnCommand = 0;
                 movCmd.ThrustCommand = 1;
-                weaponData.ShootDirection = math.normalize(new float3(random.Random.NextFloat(0f,1f), random.Random.NextFloat(0f,1f), 0));
+                weaponData.ShootDirection = random.Random.NextFloat3Direction();
                 shotCmd.ShootCommand = true;
                 ufoIA.CurrentTimeSinceDirectionChangeAttempt += deltaTime;
                 if(ufoIA.CurrentTimeSinceDirectionChangeAttempt >= ufoIA.AttemptChangeDirectionTimer)
