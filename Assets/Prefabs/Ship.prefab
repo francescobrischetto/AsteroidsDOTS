@@ -117,7 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 949e5e40b49d4c0ca2eeb77adea14e74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MovementFriction: 0.2
+  MovementFriction: 0.5
   Acceleration: 4
   TurnRate: 6
 --- !u!114 &28194131461653020
@@ -169,6 +169,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FireRate: 0.3
+  FireRateMultiplier: 1
+  NumProjectilesToSpawn: 1
+  SpaceBetweenProjectiles: 1
   ProjectileSpeed: 17
   ProjectileEntity: {fileID: 3389020302516124100, guid: 13369a1b76a9e144cb92420377e11348, type: 3}
 --- !u!114 &1728220503031401138
@@ -318,7 +321,7 @@ MonoBehaviour:
         Category02: 0
         Category03: 1
         Category04: 1
-        Category05: 0
+        Category05: 1
         Category06: 0
         Category07: 0
         Category08: 0
@@ -421,3 +424,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShouldBeDestroyed: 0
+  IsInvulnerable: 0

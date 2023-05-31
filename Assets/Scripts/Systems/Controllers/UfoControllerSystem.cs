@@ -1,12 +1,10 @@
-using Components;
 using Components.Commands;
 using Components.Data;
 using Components.Tags;
 using Systems.Commands;
-using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
-namespace Systems
+
+namespace Systems.Controllers
 {
     [UpdateBefore(typeof(MovementCmdSystem))]
     public class UfoControllerSystem : SystemBase

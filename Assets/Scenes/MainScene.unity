@@ -669,6 +669,7 @@ Transform:
   m_Children:
   - {fileID: 382965236}
   - {fileID: 1933973931}
+  - {fileID: 1249140334}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -784,6 +785,68 @@ Transform:
   m_Father: {fileID: 1386099137}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1249140333
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1249140334}
+  - component: {fileID: 1249140336}
+  - component: {fileID: 1249140335}
+  m_Layer: 0
+  m_Name: PowerUpPrefabs
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1249140334
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249140333}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.8502016, y: -0.40147394, z: 1.4746397}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 993720801}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1249140335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249140333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 118cb3c4424a4f51a0474fef21658eeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BootStrap: {fileID: 2090029899}
+  PowerUpObjects:
+  - {fileID: 6174048515372572811, guid: d9a8522c819bf3f45b125089385eda20, type: 3}
+  - {fileID: 6174048515372572811, guid: c8aa644aabafa5f45b82c05d0794573a, type: 3}
+  - {fileID: 4477686802652341357, guid: d95f5014408eef34891629cb36ccb20f, type: 3}
+--- !u!114 &1249140336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249140333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ConversionMode: 0
 --- !u!1 &1386099136
 GameObject:
   m_ObjectHideFlags: 0
@@ -1076,7 +1139,7 @@ GameObject:
   - component: {fileID: 2090029900}
   - component: {fileID: 2090029899}
   m_Layer: 0
-  m_Name: GameBootstrap
+  m_Name: GameController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1105,8 +1168,9 @@ MonoBehaviour:
   - {fileID: 1133367715}
   - {fileID: 1864990596}
   - {fileID: 1616365190}
-  AsteroidSpawnFrequency: 2
-  UfoSpawnFrequency: 6
+  AsteroidSpawnFrequency: 7
+  UfoSpawnFrequency: 15
+  PowerUpSpawnFrequency: 10
 --- !u!4 &2090029900
 Transform:
   m_ObjectHideFlags: 0

@@ -182,5 +182,26 @@ PrefabInstance:
       propertyPath: TurnRate
       value: 4
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 674763638977140545, guid: fa758fc82155dd3418dd23dea8ca3a78, type: 3}
+      propertyPath: ShootDirection.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 674763638977140545, guid: fa758fc82155dd3418dd23dea8ca3a78, type: 3}
+      propertyPath: ShootDirection.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2948461186455459313, guid: fa758fc82155dd3418dd23dea8ca3a78, type: 3}
+      propertyPath: FireRateMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2948461186455459313, guid: fa758fc82155dd3418dd23dea8ca3a78, type: 3}
+      propertyPath: NumProjectilesToSpawn
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2948461186455459313, guid: fa758fc82155dd3418dd23dea8ca3a78, type: 3}
+      propertyPath: SpaceBetweenParallelShots
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 7257583742004782163, guid: fa758fc82155dd3418dd23dea8ca3a78, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: fa758fc82155dd3418dd23dea8ca3a78, type: 3}

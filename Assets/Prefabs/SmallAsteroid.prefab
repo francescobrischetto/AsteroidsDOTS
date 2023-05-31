@@ -144,6 +144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShouldBeDestroyed: 0
+  IsInvulnerable: 0
 --- !u!114 &5029160090084789386
 MonoBehaviour:
   m_ObjectHideFlags: 0

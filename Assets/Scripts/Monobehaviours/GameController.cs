@@ -7,18 +7,21 @@ using UnityEngine;
 
 namespace Monobehaviours
 {
-    public class BootStrap : MonoBehaviour
+    public class GameController : MonoBehaviour
     {
         private EntityManager _entityManager;
         private float _currentTimerSinceLastAsteroidSpawn;
         private float _currentTimerSinceLastUfoSpawn;
+        private float _currentTimerSinceLastPowerUpSpawn;
 
         public Entity AsteroidPrefabs;
         public Entity UfoPrefabs;  
+        public Entity PowerUpPrefabs;
+        public Entity LastPowerUpSpawned;
         public Transform[] SpawnPositions;
         public float AsteroidSpawnFrequency = 2f;
         public float UfoSpawnFrequency = 6f;
-
+        public float PowerUpSpawnFrequency = 2f;
         private void Awake()
         {
             _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
@@ -27,7 +30,7 @@ namespace Monobehaviours
         private void Start()
         {
             _entityManager.CreateEntity(typeof(InputDataComponent));
-            
+            SpawnAsteroid();
         }
 
         private void SpawnAsteroid()
@@ -62,16 +65,10 @@ namespace Monobehaviours
         private void SpawnUfo()
         {
             var buffer = _entityManager.GetBuffer<UfoBufferElement>(UfoPrefabs);
+            
             //Spawning randomly an ufo
-            Entity newUfo;
-            if(Random.Range(0f, 1f) < 0.5f)
-            {
-                newUfo = _entityManager.Instantiate(buffer[0].Value);
-            }
-            else
-            {
-                newUfo = _entityManager.Instantiate(buffer[1].Value);
-            }
+            int randomIndex = Random.Range(0, buffer.Length);
+            Entity newUfo = _entityManager.Instantiate(buffer[randomIndex].Value);
 
             var randomSpawnPositionIndex = Random.Range(0, SpawnPositions.Length);
             var spawnPosition = SpawnPositions[randomSpawnPositionIndex].position;
@@ -94,10 +91,24 @@ namespace Monobehaviours
             });
         }
 
+        private void SpawnPowerUp()
+        {
+            var buffer = _entityManager.GetBuffer<PowerUpBufferElement>(PowerUpPrefabs);
+            
+            int randomIndex = Random.Range(0, buffer.Length);
+            LastPowerUpSpawned = _entityManager.Instantiate(buffer[randomIndex].Value);
+
+            _entityManager.SetComponentData(LastPowerUpSpawned, new Translation()
+            {
+                Value = new Vector3(Random.Range(-4f, 4f),Random.Range(-4f, 4f), 0)
+            });
+        }
+        
         private void Update()
         {
             _currentTimerSinceLastAsteroidSpawn += Time.deltaTime;
             _currentTimerSinceLastUfoSpawn += Time.deltaTime;
+            _currentTimerSinceLastPowerUpSpawn += Time.deltaTime;
 
             if (_currentTimerSinceLastAsteroidSpawn > AsteroidSpawnFrequency)
             {
@@ -109,7 +120,15 @@ namespace Monobehaviours
                 _currentTimerSinceLastUfoSpawn = 0;
                 SpawnUfo();
             }
-
+            if (_currentTimerSinceLastPowerUpSpawn > PowerUpSpawnFrequency)
+            {
+                _currentTimerSinceLastPowerUpSpawn = 0;
+                // spawn new powerup if there isn't already one in game
+                if (!_entityManager.Exists(LastPowerUpSpawned))
+                {
+                    SpawnPowerUp();
+                }
+            }
         }
     }
 }

@@ -6,5 +6,6 @@ namespace Components.Data
     public struct DestroyableDataComponent : IComponentData
     {
         public bool ShouldBeDestroyed;
+        public bool IsInvulnerable;
     }
 }

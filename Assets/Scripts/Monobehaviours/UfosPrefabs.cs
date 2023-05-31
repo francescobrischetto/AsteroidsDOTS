@@ -6,7 +6,7 @@ namespace Monobehaviours
 {
     public class UfosPrefabs : MonoBehaviour, IConvertGameObjectToEntity, IDeclareReferencedPrefabs
     {
-        public BootStrap BootStrap;
+        public GameController BootStrap;
         public GameObject[] UfosObjects;
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)

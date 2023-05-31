@@ -7,6 +7,9 @@ namespace Components.Stats
     public struct WeaponStatsComponent : IComponentData
     {
         public float FireRate;
+        public float FireRateMultiplier;
+        public int NumProjectilesToSpawn;
+        public float SpaceBetweenProjectiles;
         public float ProjectileSpeed;
         public Entity ProjectileEntity;
     }

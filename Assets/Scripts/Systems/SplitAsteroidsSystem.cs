@@ -2,12 +2,9 @@ using Components.Data;
 using Components.Tag;
 using Components.Tags;
 using Monobehaviours;
-using System.Linq;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Systems
 {
@@ -15,12 +12,10 @@ namespace Systems
     public class SplitAsteroidsSystem : SystemBase
     {
         private EndSimulationEntityCommandBufferSystem _endSimulationECBS;
-        private EntityManager _entityManager;
         protected override void OnCreate()
         {
             base.OnCreate();
             _endSimulationECBS = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-            _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         }
 
         protected override void OnUpdate()
@@ -53,7 +48,8 @@ namespace Systems
                             ecb.SetComponent(entityInQueryIndex, newProjectile, new Rotation { Value = rotation.Value });
                             ecb.SetComponent(entityInQueryIndex, newProjectile, new MovementDataComponent
                             {
-                                CurrentVelocity = math.mul(rotation.Value, new float3(random.Random.NextFloat2(-3f, 3f), 0f))
+                                CurrentVelocity = math.mul(rotation.Value, new float3(random.Random.NextFloat2(-3f, 3f), 0f)),
+                                CurrentTurnAngle = random.Random.NextFloat(0.1f, 3f)
                             });
                             ecb.SetComponent(entityInQueryIndex, newProjectile, new RandomDataComponent
                             {

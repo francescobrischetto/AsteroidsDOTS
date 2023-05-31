@@ -3,6 +3,7 @@ using Components.Stats;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
 namespace Systems
 {
@@ -23,22 +24,28 @@ namespace Systems
             var ecb = _endSimulationECBS.CreateCommandBuffer().AsParallelWriter();
 
             Entities.ForEach((Entity entity, int entityInQueryIndex
-                , ref WeaponDataComponent weaponData, in MovementDataComponent movData, in WeaponStatsComponent weaponStats, in Translation translation, in Rotation rotation) =>
+                , ref WeaponDataComponent weaponData, in WeaponStatsComponent weaponStats, in MovementDataComponent movData, in Translation translation, in Rotation rotation) =>
             {
-                weaponData.FireTimer += deltaTime;
+                weaponData.FireTimer += deltaTime * weaponStats.FireRateMultiplier;
                 
                 if (!weaponData.IsShooting || weaponData.FireTimer < weaponStats.FireRate) return;
                 
                 weaponData.FireTimer = 0;
-                Entity newProjectile = ecb.Instantiate(entityInQueryIndex, weaponStats.ProjectileEntity);
-
-                ecb.SetComponent(entityInQueryIndex, newProjectile, new Translation { Value = translation.Value });
-                ecb.SetComponent(entityInQueryIndex, newProjectile, new Rotation { Value = math.mul(rotation.Value, quaternion.Euler(weaponData.ShootDirection)) });
-                ecb.SetComponent(entityInQueryIndex, newProjectile, new MovementDataComponent
+                
+                for (int i = 0; i < weaponStats.NumProjectilesToSpawn; ++i)
                 {
-                    CurrentVelocity = math.mul(rotation.Value, weaponData.ShootDirection * weaponStats.ProjectileSpeed)
-                }) ;
-
+                    Entity newProjectile = ecb.Instantiate(entityInQueryIndex, weaponStats.ProjectileEntity);
+                    
+                    Vector3 projectileDirection = math.mul(rotation.Value, weaponData.ShootDirection);
+                    projectileDirection.Normalize();
+                    
+                    ecb.SetComponent(entityInQueryIndex, newProjectile, new Translation { Value = translation.Value + i * (float3)projectileDirection * weaponStats.SpaceBetweenProjectiles });
+                    ecb.SetComponent(entityInQueryIndex, newProjectile, new Rotation { Value = rotation.Value });
+                    ecb.SetComponent(entityInQueryIndex, newProjectile, new MovementDataComponent
+                    {
+                        CurrentVelocity = projectileDirection * weaponStats.ProjectileSpeed
+                    });
+                }
             }).ScheduleParallel();
             
             _endSimulationECBS.AddJobHandleForProducer(Dependency);

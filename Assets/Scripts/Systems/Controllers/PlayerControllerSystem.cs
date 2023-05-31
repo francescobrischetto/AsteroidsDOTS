@@ -1,4 +1,3 @@
-using Components;
 using Components.Commands;
 using Components.Data;
 using Components.Tags;
@@ -6,7 +5,7 @@ using Systems.Commands;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace Systems
+namespace Systems.Controllers
 {
     [UpdateBefore(typeof(MovementCmdSystem))]
     public class PlayerControllerSystem : SystemBase
