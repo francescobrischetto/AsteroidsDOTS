@@ -6,7 +6,7 @@ namespace Monobehaviours
 {
     public class AsteroidsPrefabs : MonoBehaviour, IConvertGameObjectToEntity, IDeclareReferencedPrefabs
     {
-        public GameController BootStrap;
+        public GameController GameController;
         public GameObject[] AsteroidsObjects;
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
@@ -19,7 +19,7 @@ namespace Monobehaviours
                     Value = conversionSystem.GetPrimaryEntity(asteroid)
                 });
             }
-            BootStrap.AsteroidPrefabs = entity;
+            GameController.AsteroidPrefabs = entity;
         }
 
         public void DeclareReferencedPrefabs(List<GameObject> referencedPrefabs)

@@ -6,7 +6,7 @@ namespace Monobehaviours
 {
     public class PowerUpPrefabs : MonoBehaviour, IConvertGameObjectToEntity, IDeclareReferencedPrefabs
     {
-        public GameController BootStrap;
+        public GameController GameController;
         public GameObject[] PowerUpObjects;
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
@@ -19,7 +19,7 @@ namespace Monobehaviours
                     Value = conversionSystem.GetPrimaryEntity(powerUp)
                 });
             }
-            BootStrap.PowerUpPrefabs = entity;
+            GameController.PowerUpPrefabs = entity;
         }
 
         public void DeclareReferencedPrefabs(List<GameObject> referencedPrefabs)

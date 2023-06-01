@@ -4,6 +4,9 @@ using Unity.Transforms;
 using Unity.Mathematics;
 using Random = UnityEngine.Random;
 using UnityEngine;
+using Systems;
+using System.Collections;
+using Components.Stats;
 
 namespace Monobehaviours
 {
@@ -18,6 +21,8 @@ namespace Monobehaviours
         public Entity UfoPrefabs;  
         public Entity PowerUpPrefabs;
         public Entity LastPowerUpSpawned;
+        public Entity ShipPrefab;
+
         public Transform[] SpawnPositions;
         public float AsteroidSpawnFrequency = 2f;
         public float UfoSpawnFrequency = 6f;
@@ -25,12 +30,16 @@ namespace Monobehaviours
         private void Awake()
         {
             _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<DestroyableSystem>().OnShipDestroyed += RespawnShip;
         }
 
         private void Start()
         {
             _entityManager.CreateEntity(typeof(InputDataComponent));
+            Entity shipEntity = SpawnShipAtPosition(Vector3.zero);
+            GrantShipInvulnerability(shipEntity, 1.5f);
             SpawnAsteroid();
+            
         }
 
         private void SpawnAsteroid()
@@ -60,6 +69,7 @@ namespace Monobehaviours
             {
                 Random = Unity.Mathematics.Random.CreateFromIndex((uint)Time.time)
             });
+
         }
 
         private void SpawnUfo()
@@ -87,8 +97,8 @@ namespace Monobehaviours
 
             _entityManager.SetComponentData(newUfo, new RandomDataComponent
             {
-                Random = Unity.Mathematics.Random.CreateFromIndex((uint)Time.time)
-            });
+                Random = new Unity.Mathematics.Random((uint)Random.Range(int.MinValue, int.MaxValue))
+            }) ;
         }
 
         private void SpawnPowerUp()
@@ -129,6 +139,48 @@ namespace Monobehaviours
                     SpawnPowerUp();
                 }
             }
+        }
+
+        private Entity SpawnShipAtPosition(Vector3 spawnPosition)
+        {
+            var shipPrefabReference = _entityManager.GetComponentData<ShipElementDataComponent>(ShipPrefab);
+            var playerShip = _entityManager.Instantiate(shipPrefabReference.Value);
+            _entityManager.SetComponentData(playerShip, new Translation
+            {
+                Value = spawnPosition
+            });
+            return playerShip;
+        }
+
+        private void RespawnShip(object sender, System.EventArgs e)
+        {
+            StartCoroutine(SpawnShipAfterDelay(1));
+        }
+
+        private void GrantShipInvulnerability(Entity playerShip, float seconds)
+        {
+            EntityArchetype powerUpArchetype = _entityManager.CreateArchetype(
+                typeof(PowerUpDataComponent),
+                typeof(PowerUpStatsComponent)
+            );
+            Entity powerUpEntity = _entityManager.CreateEntity(powerUpArchetype);
+            _entityManager.SetComponentData(powerUpEntity, new PowerUpDataComponent
+            {
+                MaxTime = seconds,
+                TargetEntity = playerShip
+            });
+            _entityManager.SetComponentData(powerUpEntity, new PowerUpStatsComponent
+            {
+                Type = PowerUpType.Invulnerable
+            });
+
+        }
+
+        private IEnumerator SpawnShipAfterDelay(float seconds)
+        {
+            yield return new WaitForSeconds(seconds);
+            Entity playerShip = SpawnShipAtPosition(Vector3.zero);
+            GrantShipInvulnerability(playerShip, 1.5f);
         }
     }
 }

@@ -1,5 +1,6 @@
 using Components.Data;
 using Components.Stats;
+using Components.Tags;
 using Unity.Entities;
 
 namespace Systems
@@ -20,6 +21,8 @@ namespace Systems
             var ecb = _endSimulationECBS.CreateCommandBuffer().AsParallelWriter();
             ComponentDataFromEntity<WeaponStatsComponent> weaponStatsEntities = GetComponentDataFromEntity<WeaponStatsComponent>(true);
             ComponentDataFromEntity<DestroyableDataComponent> destroyableEntities = GetComponentDataFromEntity<DestroyableDataComponent>(true);
+            ComponentDataFromEntity<PlayerTagComponent> playersEntities = GetComponentDataFromEntity<PlayerTagComponent>(true);
+
 
             Entities.ForEach((Entity entity, int entityInQueryIndex, ref PowerUpDataComponent powerUpData, ref PowerUpStatsComponent powerUpStats) =>
             {
@@ -27,83 +30,90 @@ namespace Systems
 
                 if (powerUpData.ElapsedTime < powerUpData.MaxTime)
                 {
-                    switch (powerUpStats.Type)
+                    if (playersEntities.HasComponent(powerUpData.TargetEntity))
                     {
-                        case PowerUpType.Invulnerable:
-                            DestroyableDataComponent destroyableDataComponent = destroyableEntities[powerUpData.TargetEntity];
-                            ecb.SetComponent(powerUpData.TargetEntity.Index, powerUpData.TargetEntity, new DestroyableDataComponent()
-                            {
-                                IsInvulnerable = true,
-                                ShouldBeDestroyed = destroyableDataComponent.ShouldBeDestroyed
-                            });
-                            break;
-                        case PowerUpType.TriShot:
-                            WeaponStatsComponent weaponStatsComponent = weaponStatsEntities[powerUpData.TargetEntity];
-                            ecb.SetComponent(powerUpData.TargetEntity.Index, powerUpData.TargetEntity, new WeaponStatsComponent()
-                            {
-                                ProjectileEntity = weaponStatsComponent.ProjectileEntity,
-                                ProjectileSpeed = weaponStatsComponent.ProjectileSpeed,
-                                SpaceBetweenProjectiles = weaponStatsComponent.SpaceBetweenProjectiles,
-                                FireRate = weaponStatsComponent.FireRate,
-                                FireRateMultiplier = weaponStatsComponent.FireRateMultiplier,
-                                NumProjectilesToSpawn = 3
-                            });
-                            break;
-                        case PowerUpType.DoubleFireRate:
-                            WeaponStatsComponent weaponStatsComponent2 = weaponStatsEntities[powerUpData.TargetEntity];
-                            ecb.SetComponent(powerUpData.TargetEntity.Index, powerUpData.TargetEntity, new WeaponStatsComponent()
-                            {
-                                ProjectileEntity = weaponStatsComponent2.ProjectileEntity,
-                                ProjectileSpeed = weaponStatsComponent2.ProjectileSpeed,
-                                SpaceBetweenProjectiles = weaponStatsComponent2.SpaceBetweenProjectiles,
-                                FireRate = weaponStatsComponent2.FireRate,
-                                FireRateMultiplier = 2,
-                                NumProjectilesToSpawn = weaponStatsComponent2.NumProjectilesToSpawn,
-                            });
-                            break;
+                        switch (powerUpStats.Type)
+                        {
+                            case PowerUpType.Invulnerable:
+                                DestroyableDataComponent destroyableDataComponent = destroyableEntities[powerUpData.TargetEntity];
+                                ecb.SetComponent(powerUpData.TargetEntity.Index, powerUpData.TargetEntity, new DestroyableDataComponent()
+                                {
+                                    IsInvulnerable = true,
+                                    ShouldBeDestroyed = destroyableDataComponent.ShouldBeDestroyed
+                                });
+                                break;
+                            case PowerUpType.TriShot:
+                                WeaponStatsComponent weaponStatsComponent = weaponStatsEntities[powerUpData.TargetEntity];
+                                ecb.SetComponent(powerUpData.TargetEntity.Index, powerUpData.TargetEntity, new WeaponStatsComponent()
+                                {
+                                    ProjectileEntity = weaponStatsComponent.ProjectileEntity,
+                                    ProjectileSpeed = weaponStatsComponent.ProjectileSpeed,
+                                    AngleBetweenProjectiles = weaponStatsComponent.AngleBetweenProjectiles,
+                                    FireRate = weaponStatsComponent.FireRate,
+                                    FireRateMultiplier = weaponStatsComponent.FireRateMultiplier,
+                                    NumProjectilesToSpawn = 3
+                                });
+                                break;
+                            case PowerUpType.DoubleFireRate:
+                                WeaponStatsComponent weaponStatsComponent2 = weaponStatsEntities[powerUpData.TargetEntity];
+                                ecb.SetComponent(powerUpData.TargetEntity.Index, powerUpData.TargetEntity, new WeaponStatsComponent()
+                                {
+                                    ProjectileEntity = weaponStatsComponent2.ProjectileEntity,
+                                    ProjectileSpeed = weaponStatsComponent2.ProjectileSpeed,
+                                    AngleBetweenProjectiles = weaponStatsComponent2.AngleBetweenProjectiles,
+                                    FireRate = weaponStatsComponent2.FireRate,
+                                    FireRateMultiplier = 2,
+                                    NumProjectilesToSpawn = weaponStatsComponent2.NumProjectilesToSpawn,
+                                });
+                                break;
+                        }
                     }
+                    
                 }
                 else
                 {
                     ecb.DestroyEntity(entityInQueryIndex,entity);
-                    switch (powerUpStats.Type)
+                    if (playersEntities.HasComponent(powerUpData.TargetEntity))
                     {
-                        case PowerUpType.Invulnerable:
-                            DestroyableDataComponent destroyableDataComponent = destroyableEntities[powerUpData.TargetEntity];
-                            ecb.SetComponent(powerUpData.TargetEntity.Index, powerUpData.TargetEntity, new DestroyableDataComponent()
-                            {
-                                IsInvulnerable = false,
-                                ShouldBeDestroyed = destroyableDataComponent.ShouldBeDestroyed
-                            });
-                            break;
-                        case PowerUpType.TriShot:
-                            WeaponStatsComponent weaponStatsComponent = weaponStatsEntities[powerUpData.TargetEntity];
-                            ecb.SetComponent(powerUpData.TargetEntity.Index, powerUpData.TargetEntity, new WeaponStatsComponent()
-                            {
-                                ProjectileEntity = weaponStatsComponent.ProjectileEntity,
-                                ProjectileSpeed = weaponStatsComponent.ProjectileSpeed,
-                                SpaceBetweenProjectiles = weaponStatsComponent.SpaceBetweenProjectiles,
-                                FireRate = weaponStatsComponent.FireRate,
-                                FireRateMultiplier = weaponStatsComponent.FireRateMultiplier,
-                                NumProjectilesToSpawn = 1,
-                            });
-                            break;
-                        case  PowerUpType.DoubleFireRate:
-                            WeaponStatsComponent weaponStatsComponent2 = weaponStatsEntities[powerUpData.TargetEntity];
-                            ecb.SetComponent(powerUpData.TargetEntity.Index, powerUpData.TargetEntity, new WeaponStatsComponent()
-                            {
-                                ProjectileEntity = weaponStatsComponent2.ProjectileEntity,
-                                ProjectileSpeed = weaponStatsComponent2.ProjectileSpeed,
-                                SpaceBetweenProjectiles = weaponStatsComponent2.SpaceBetweenProjectiles,
-                                FireRate = weaponStatsComponent2.FireRate,
-                                FireRateMultiplier = 1,
-                                NumProjectilesToSpawn = weaponStatsComponent2.NumProjectilesToSpawn,
-                            });
-                            break;
+                        switch (powerUpStats.Type)
+                        {
+                            case PowerUpType.Invulnerable:
+                                DestroyableDataComponent destroyableDataComponent = destroyableEntities[powerUpData.TargetEntity];
+                                ecb.SetComponent(powerUpData.TargetEntity.Index, powerUpData.TargetEntity, new DestroyableDataComponent()
+                                {
+                                    IsInvulnerable = false,
+                                    ShouldBeDestroyed = destroyableDataComponent.ShouldBeDestroyed
+                                });
+                                break;
+                            case PowerUpType.TriShot:
+                                WeaponStatsComponent weaponStatsComponent = weaponStatsEntities[powerUpData.TargetEntity];
+                                ecb.SetComponent(powerUpData.TargetEntity.Index, powerUpData.TargetEntity, new WeaponStatsComponent()
+                                {
+                                    ProjectileEntity = weaponStatsComponent.ProjectileEntity,
+                                    ProjectileSpeed = weaponStatsComponent.ProjectileSpeed,
+                                    AngleBetweenProjectiles = weaponStatsComponent.AngleBetweenProjectiles,
+                                    FireRate = weaponStatsComponent.FireRate,
+                                    FireRateMultiplier = weaponStatsComponent.FireRateMultiplier,
+                                    NumProjectilesToSpawn = 1,
+                                });
+                                break;
+                            case PowerUpType.DoubleFireRate:
+                                WeaponStatsComponent weaponStatsComponent2 = weaponStatsEntities[powerUpData.TargetEntity];
+                                ecb.SetComponent(powerUpData.TargetEntity.Index, powerUpData.TargetEntity, new WeaponStatsComponent()
+                                {
+                                    ProjectileEntity = weaponStatsComponent2.ProjectileEntity,
+                                    ProjectileSpeed = weaponStatsComponent2.ProjectileSpeed,
+                                    AngleBetweenProjectiles = weaponStatsComponent2.AngleBetweenProjectiles,
+                                    FireRate = weaponStatsComponent2.FireRate,
+                                    FireRateMultiplier = 1,
+                                    NumProjectilesToSpawn = weaponStatsComponent2.NumProjectilesToSpawn,
+                                });
+                                break;
+                        }
                     }
                 }
 
-            }).WithReadOnly(weaponStatsEntities).WithReadOnly(destroyableEntities).ScheduleParallel();
+            }).WithReadOnly(weaponStatsEntities).WithReadOnly(destroyableEntities).WithReadOnly(playersEntities).ScheduleParallel();
 
             _endSimulationECBS.AddJobHandleForProducer(Dependency);
         }

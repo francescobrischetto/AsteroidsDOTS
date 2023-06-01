@@ -1,6 +1,7 @@
 using Components.Data;
 using Components.Stats;
 using Components.Tags;
+using System;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
@@ -17,7 +18,6 @@ namespace Systems
         private EndSimulationEntityCommandBufferSystem _endSimulationECBS;
         private EntityManager _entityManager;
         private EntityArchetype powerUpArchetype;
-
         protected override void OnCreate()
         {
             base.OnCreate();
@@ -67,6 +67,7 @@ namespace Systems
                 }
                 return false;
             }
+
 
             public void ManagePlayerPowerUpInteraction(TriggerEvent triggerEvent)
             {
@@ -143,7 +144,7 @@ namespace Systems
                 powerUpArchetype = powerUpArchetype,
             };
             var jobHandle = job.Schedule(stepPhysicsWorld.Simulation, ref physicsWorld.PhysicsWorld, inputDeps);
-            jobHandle.Complete();
+            //jobHandle.Complete();
             _endSimulationECBS.AddJobHandleForProducer(inputDeps);
             return jobHandle;
         }

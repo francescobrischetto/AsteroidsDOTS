@@ -119,7 +119,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MovementFriction: 0.5
   Acceleration: 4
-  TurnRate: 6
+  TurnRate: 4
 --- !u!114 &28194131461653020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,7 +171,7 @@ MonoBehaviour:
   FireRate: 0.3
   FireRateMultiplier: 1
   NumProjectilesToSpawn: 1
-  SpaceBetweenProjectiles: 1
+  AngleBetweenProjectiles: 0.2
   ProjectileSpeed: 17
   ProjectileEntity: {fileID: 3389020302516124100, guid: 13369a1b76a9e144cb92420377e11348, type: 3}
 --- !u!114 &1728220503031401138

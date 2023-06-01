@@ -372,7 +372,7 @@ MonoBehaviour:
   FireRate: 1.5
   FireRateMultiplier: 1
   NumProjectilesToSpawn: 1
-  SpaceBetweenProjectiles: 0
+  AngleBetweenProjectiles: 0
   ProjectileSpeed: 17
   ProjectileEntity: {fileID: 3389020302516124100, guid: 288649d7b583c4b4682cba343dbb00d1, type: 3}
 --- !u!114 &8820596588399754762

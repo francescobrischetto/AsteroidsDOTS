@@ -35,12 +35,15 @@ namespace Systems
                 for (int i = 0; i < weaponStats.NumProjectilesToSpawn; ++i)
                 {
                     Entity newProjectile = ecb.Instantiate(entityInQueryIndex, weaponStats.ProjectileEntity);
-                    
-                    Vector3 projectileDirection = math.mul(rotation.Value, weaponData.ShootDirection);
+                    int rotationMultiplier = (int)math.ceil(i / 2.0f);
+                    rotationMultiplier = i % 2 == 0 ? -rotationMultiplier : rotationMultiplier;
+                    quaternion projectileRotation = math.mul(rotation.Value, quaternion.Euler(0, 0, rotationMultiplier * weaponStats.AngleBetweenProjectiles));
+                    Vector3 projectileDirection = math.mul(projectileRotation, weaponData.ShootDirection);
                     projectileDirection.Normalize();
-                    
-                    ecb.SetComponent(entityInQueryIndex, newProjectile, new Translation { Value = translation.Value + i * (float3)projectileDirection * weaponStats.SpaceBetweenProjectiles });
-                    ecb.SetComponent(entityInQueryIndex, newProjectile, new Rotation { Value = rotation.Value });
+
+
+                    ecb.SetComponent(entityInQueryIndex, newProjectile, new Translation { Value = translation.Value });
+                    ecb.SetComponent(entityInQueryIndex, newProjectile, new Rotation { Value = projectileRotation});
                     ecb.SetComponent(entityInQueryIndex, newProjectile, new MovementDataComponent
                     {
                         CurrentVelocity = projectileDirection * weaponStats.ProjectileSpeed
