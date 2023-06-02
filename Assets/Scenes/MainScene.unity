@@ -1668,9 +1668,9 @@ MonoBehaviour:
   - {fileID: 1133367715}
   - {fileID: 1864990596}
   - {fileID: 1616365190}
-  AsteroidSpawnFrequency: 9
-  UfoSpawnFrequency: 15
-  PowerUpSpawnFrequency: 10
+  AsteroidSpawnFrequency: 0.12
+  UfoSpawnFrequency: 0.067
+  PowerUpSpawnFrequency: 0.1
 --- !u!4 &2090029900
 Transform:
   m_ObjectHideFlags: 0

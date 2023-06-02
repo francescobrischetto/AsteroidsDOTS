@@ -36,9 +36,9 @@ namespace Monobehaviours
         public Entity ShipPrefab;
         public event EventHandler<ObjectPoints> OnScoreChanged;
         public Transform[] SpawnPositions;
-        public float AsteroidSpawnFrequency = 2f;
-        public float UfoSpawnFrequency = 6f;
-        public float PowerUpSpawnFrequency = 2f;
+        public float AsteroidSpawnFrequency;
+        public float UfoSpawnFrequency;
+        public float PowerUpSpawnFrequency;
 
         private void Awake()
         {
@@ -149,17 +149,17 @@ namespace Monobehaviours
             _currentTimerSinceLastPowerUpSpawn += Time.deltaTime;
 
             //If it's time, spawn the relative entity
-            if (_currentTimerSinceLastAsteroidSpawn > AsteroidSpawnFrequency)
+            if (_currentTimerSinceLastAsteroidSpawn > (1 / AsteroidSpawnFrequency))
             {
                 _currentTimerSinceLastAsteroidSpawn = 0;
                 SpawnAsteroid();
             }
-            if (_currentTimerSinceLastUfoSpawn > UfoSpawnFrequency)
+            if (_currentTimerSinceLastUfoSpawn > (1 / UfoSpawnFrequency))
             {
                 _currentTimerSinceLastUfoSpawn = 0;
                 SpawnUfo();
             }
-            if (_currentTimerSinceLastPowerUpSpawn > PowerUpSpawnFrequency)
+            if (_currentTimerSinceLastPowerUpSpawn > (1 / PowerUpSpawnFrequency))
             {
                 _currentTimerSinceLastPowerUpSpawn = 0;
                 // spawn new powerup if there isn't already one in game
