@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
+using Utils;
 public class SoundsPrefab : MonoBehaviour
 {    public static SoundsPrefab Instance { get; private set; }
 

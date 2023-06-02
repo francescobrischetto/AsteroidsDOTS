@@ -19,11 +19,14 @@ namespace Systems.Controllers
             {
                 movCmd.TurnCommand = 0;
                 movCmd.ThrustCommand = 1;
+                //Firing in a random direction 
                 weaponData.ShootDirection = random.Random.NextFloat3Direction();
                 shotCmd.ShootCommand = true;
                 ufoIA.CurrentTimeSinceDirectionChangeAttempt += deltaTime;
+                //Evaluating to rotate
                 if(ufoIA.CurrentTimeSinceDirectionChangeAttempt >= ufoIA.AttemptChangeDirectionTimer)
                 {
+                    //Rotating for 1 frame
                     if(random.Random.NextFloat(0,1) < ufoIA.ChangeDirectionRate)
                     {
                         movCmd.TurnCommand = 1;

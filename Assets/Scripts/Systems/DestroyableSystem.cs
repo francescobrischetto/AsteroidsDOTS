@@ -1,8 +1,10 @@
 using Components.Data;
 using Components.Tags;
+using Monobehaviours;
 using System;
 using Unity.Entities;
 using Unity.Jobs;
+using Utils;
 
 namespace Systems
 {
@@ -11,9 +13,9 @@ namespace Systems
     {
         private EndSimulationEntityCommandBufferSystem _endSimulationECBS;
         public event EventHandler OnShipDestroyed;
-        public event EventHandler OnObjectDestroyed;
+        public event EventHandler<ObjectPoints> OnObjectDestroyed;
         public struct OnShipDestroyedEvent : IComponentData { public int Value; }
-        public struct OnObjectDestroyedEvent : IComponentData { public int Value; }
+        public struct OnObjectDestroyedEvent : IComponentData { public ObjectPoints DestroyedObject; }
 
         private DOTSEvents_NextFrame<OnShipDestroyedEvent> dotsEventShip;
         private DOTSEvents_NextFrame<OnObjectDestroyedEvent> dotsEventObjects;
@@ -37,15 +39,49 @@ namespace Systems
             {
                 if(destroyableData.ShouldBeDestroyed)
                 {
-                    //Specific condition
                     if (playerComponents.HasComponent(entity))
                     {
                         eventTriggerShip.TriggerEvent(entityInQueryIndex);
 
                     }
-                    else if(ufoComponents.HasComponent(entity) || asteroidComponents.HasComponent(entity))
+                    else if(ufoComponents.HasComponent(entity))
                     {
-                        eventTriggerObjects.TriggerEvent(entityInQueryIndex);
+                        ObjectPoints destroyedObject = ObjectPoints.LargeUfo;
+                        switch (ufoComponents[entity].Type)
+                        {
+                            case UfoType.Large:
+                                destroyedObject = ObjectPoints.LargeUfo;
+                                break;
+                            case UfoType.Small:
+                                destroyedObject = ObjectPoints.SmallUfo;
+                                break;
+
+                        }
+                        eventTriggerObjects.TriggerEvent(entityInQueryIndex, new OnObjectDestroyedEvent
+                        {
+                            DestroyedObject = destroyedObject
+                        });
+                    }
+                    else if (asteroidComponents.HasComponent(entity))
+                    {
+                        ObjectPoints destroyedObject = ObjectPoints.LargeAsteroid;
+                        switch (asteroidComponents[entity].Type)
+                        {
+                            case AsteroidType.Large:
+                                destroyedObject = ObjectPoints.LargeAsteroid;
+                                break;
+                            case AsteroidType.Medium:
+                                destroyedObject = ObjectPoints.MediumAsteroid;
+                                break;
+                            case AsteroidType.Small:
+                                destroyedObject = ObjectPoints.SmallAsteroid;
+                                break;
+
+                        }
+                        eventTriggerObjects.TriggerEvent(entityInQueryIndex, new OnObjectDestroyedEvent
+                        {
+                            DestroyedObject = destroyedObject
+                        });
                     }
                     ecb.DestroyEntity(entityInQueryIndex, entity);     
                 }
@@ -55,7 +91,7 @@ namespace Systems
                 OnShipDestroyed?.Invoke(this, EventArgs.Empty);
             });
             dotsEventObjects.CaptureEvents(eventTriggerObjects, jobHandle, (OnObjectDestroyedEvent onObjectDestroyedEvent) => {
-                OnObjectDestroyed?.Invoke(this, EventArgs.Empty);
+                OnObjectDestroyed?.Invoke(this, onObjectDestroyedEvent.DestroyedObject);
             });
             Dependency = JobHandle.CombineDependencies(jobHandle, Dependency);
             _endSimulationECBS.AddJobHandleForProducer(Dependency);

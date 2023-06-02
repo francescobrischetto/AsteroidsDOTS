@@ -43,15 +43,17 @@ namespace Systems
                     {
                         for (int i = 0; i < 2; i++)
                         {
-                            Entity newProjectile = ecb.Instantiate(entityInQueryIndex, nextPrefabEntity);
-                            ecb.SetComponent(entityInQueryIndex, newProjectile, new Translation { Value = translation.Value });
-                            ecb.SetComponent(entityInQueryIndex, newProjectile, new Rotation { Value = rotation.Value });
-                            ecb.SetComponent(entityInQueryIndex, newProjectile, new MovementDataComponent
+                            //Spawning two new asteroids
+                            Entity newAsteroid = ecb.Instantiate(entityInQueryIndex, nextPrefabEntity);
+                            ecb.SetComponent(entityInQueryIndex, newAsteroid, new Translation { Value = translation.Value });
+                            ecb.SetComponent(entityInQueryIndex, newAsteroid, new Rotation { Value = rotation.Value });
+                            ecb.SetComponent(entityInQueryIndex, newAsteroid, new MovementDataComponent
                             {
                                 CurrentVelocity = math.mul(rotation.Value, new float3(random.Random.NextFloat2(-3f, 3f), 0f)),
                                 CurrentTurnAngle = random.Random.NextFloat(0.1f, 3f)
                             });
-                            ecb.SetComponent(entityInQueryIndex, newProjectile, new RandomDataComponent
+                            //Initializing its random component seed
+                            ecb.SetComponent(entityInQueryIndex, newAsteroid, new RandomDataComponent
                             {
                                 Random = Random.CreateFromIndex((uint)entityInQueryIndex)
                             });

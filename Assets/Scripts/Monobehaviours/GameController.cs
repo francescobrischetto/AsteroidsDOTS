@@ -8,30 +8,48 @@ using Systems;
 using System.Collections;
 using Components.Stats;
 using System;
+using Utils;
 
 namespace Monobehaviours
 {
+    public enum ObjectPoints
+    {
+        LargeAsteroid = 20,
+        MediumAsteroid = 50,
+        SmallAsteroid = 100,
+        LargeUfo = 200,
+        SmallUfo = 1000
+    }
     public class GameController : MonoBehaviour
     {
         private EntityManager _entityManager;
+        private Entity shipEntity;
         private float _currentTimerSinceLastAsteroidSpawn;
         private float _currentTimerSinceLastUfoSpawn;
         private float _currentTimerSinceLastPowerUpSpawn;
 
+        public static GameController Instance { get; private set; }
         public Entity AsteroidPrefabs;
         public Entity UfoPrefabs;  
         public Entity PowerUpPrefabs;
         public Entity LastPowerUpSpawned;
         public Entity ShipPrefab;
-
+        public event EventHandler<ObjectPoints> OnScoreChanged;
         public Transform[] SpawnPositions;
         public float AsteroidSpawnFrequency = 2f;
         public float UfoSpawnFrequency = 6f;
         public float PowerUpSpawnFrequency = 2f;
-        private Entity shipEntity;
 
         private void Awake()
         {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(this);
+            }
+            else
+            {
+                Instance = this;
+            }
             _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<DestroyableSystem>().OnShipDestroyed += RespawnShip;
             World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<DestroyableSystem>().OnObjectDestroyed += OnObjectDestroyed;
@@ -54,7 +72,7 @@ namespace Monobehaviours
             var buffer = _entityManager.GetBuffer<AsteroidBufferElement>(AsteroidPrefabs);
             //Spawning always large asteroids
             var newAsteroid = _entityManager.Instantiate(buffer[0].Value);
-
+            //Choosing a random spawn position outside the screen
             var randomSpawnPositionIndex = Random.Range(0, SpawnPositions.Length);
             var spawnPosition = SpawnPositions[randomSpawnPositionIndex].position;
 
@@ -72,9 +90,11 @@ namespace Monobehaviours
                 CurrentVelocity = randomMoveVelocity,
                 CurrentTurnAngle = randomRotation
             });
+
+            //Initializing its random component seed
             _entityManager.SetComponentData(newAsteroid, new RandomDataComponent
             {
-                Random = Unity.Mathematics.Random.CreateFromIndex((uint)Time.time)
+                Random = new Unity.Mathematics.Random((uint)Random.Range(int.MinValue, int.MaxValue))
             });
 
         }
@@ -82,11 +102,10 @@ namespace Monobehaviours
         private void SpawnUfo()
         {
             var buffer = _entityManager.GetBuffer<UfoBufferElement>(UfoPrefabs);
-            
             //Spawning randomly an ufo
             int randomIndex = Random.Range(0, buffer.Length);
             Entity newUfo = _entityManager.Instantiate(buffer[randomIndex].Value);
-
+            //Choosing a random spawn position outside the screen
             var randomSpawnPositionIndex = Random.Range(0, SpawnPositions.Length);
             var spawnPosition = SpawnPositions[randomSpawnPositionIndex].position;
 
@@ -102,6 +121,7 @@ namespace Monobehaviours
                 CurrentVelocity = randomMoveVelocity
             });
 
+            //Initializing its random component seed
             _entityManager.SetComponentData(newUfo, new RandomDataComponent
             {
                 Random = new Unity.Mathematics.Random((uint)Random.Range(int.MinValue, int.MaxValue))
@@ -111,10 +131,11 @@ namespace Monobehaviours
         private void SpawnPowerUp()
         {
             var buffer = _entityManager.GetBuffer<PowerUpBufferElement>(PowerUpPrefabs);
-            
+            //Spawning randomly a powerup
             int randomIndex = Random.Range(0, buffer.Length);
             LastPowerUpSpawned = _entityManager.Instantiate(buffer[randomIndex].Value);
-
+            
+            //Spawning inside the playable area
             _entityManager.SetComponentData(LastPowerUpSpawned, new Translation()
             {
                 Value = new Vector3(Random.Range(-5f, 5f),Random.Range(-4f, 4f), 0)
@@ -127,6 +148,7 @@ namespace Monobehaviours
             _currentTimerSinceLastUfoSpawn += Time.deltaTime;
             _currentTimerSinceLastPowerUpSpawn += Time.deltaTime;
 
+            //If it's time, spawn the relative entity
             if (_currentTimerSinceLastAsteroidSpawn > AsteroidSpawnFrequency)
             {
                 _currentTimerSinceLastAsteroidSpawn = 0;
@@ -147,6 +169,7 @@ namespace Monobehaviours
                 }
             }
 
+            //Manage hyperspace travel with key pressed
             if (Input.GetKeyUp(KeyCode.X))
             {
                 HyperspaceTravel();
@@ -187,8 +210,6 @@ namespace Monobehaviours
             {
                 Type = PowerUpType.Invulnerable
             });
-            //OnPowerUpPicked(this, EventArgs.Empty);
-
         }
 
         private IEnumerator SpawnShipAfterDelay(float seconds)
@@ -214,9 +235,11 @@ namespace Monobehaviours
         {
             SoundManager.PlaySound(SoundManager.Sound.Shoot );
         }
-        private void OnObjectDestroyed(object sender, System.EventArgs e)
+        private void OnObjectDestroyed(object sender, ObjectPoints points)
         {
             SoundManager.PlaySound(SoundManager.Sound.ObjectDestroyed);
+            OnScoreChanged?.Invoke(this,points);
+
         }
         private void OnPowerUpPicked(object sender, System.EventArgs e)
         {

@@ -4,6 +4,7 @@ using Components.Data;
 
 namespace Components.Authorings
 {
+    // This entity holds screen Height and Width infomations used for wraparond and other systems
     public class ScreenInfoDataComponentAuthoring : MonoBehaviour, IConvertGameObjectToEntity
     {
         [SerializeField] new Camera camera;

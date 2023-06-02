@@ -9,6 +9,7 @@ namespace Components.Authorings
         [SerializeField] SpriteRenderer spriteRenderer;
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
+            //Calculating sprite bounds, useful for wraparound system
             dstManager.AddComponentData(entity, new ScreenWrapperDataComponent()
             {
                 Bounds = spriteRenderer.bounds.extents.magnitude

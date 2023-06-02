@@ -7,6 +7,7 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Physics;
 using Unity.Physics.Systems;
+using Utils;
 
 namespace Systems
 {
@@ -75,7 +76,7 @@ namespace Systems
             }
 
 
-            public void ManagePlayerPowerUpInteraction(TriggerEvent triggerEvent)
+            private void ManagePlayerPowerUpInteraction(TriggerEvent triggerEvent)
             {
                 Entity pickablePowerUp = Entity.Null;
                 Entity player = Entity.Null;
@@ -113,7 +114,7 @@ namespace Systems
                 eventTrigger.TriggerEvent(playerIndex);
             }
 
-            public void ManageRegularDestroyableInteraction(TriggerEvent triggerEvent)
+            private void ManageRegularDestroyableInteraction(TriggerEvent triggerEvent)
             {
                 if(destroyables.HasComponent(triggerEvent.EntityA) && destroyables.HasComponent(triggerEvent.EntityB))
                 {
@@ -158,7 +159,6 @@ namespace Systems
                 OnPowerUpPicked?.Invoke(this, EventArgs.Empty);
             });
             inputDeps = JobHandle.CombineDependencies(jobHandle, inputDeps);
-            //jobHandle.Complete();
             _endSimulationECBS.AddJobHandleForProducer(inputDeps);
             return jobHandle;
         }

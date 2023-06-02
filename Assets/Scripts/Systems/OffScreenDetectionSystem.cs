@@ -20,6 +20,7 @@ namespace Systems
                 var isMovingDown = currentPosition.y - previousPosition.y < 0;
                 var isMovingUp = currentPosition.y - previousPosition.y > 0;
 
+                //Those calculations considers the direction of movement and the bounds of the current entity
                 screenWrapper.IsOffScreenLeft = currentPosition.x < - (screenInfo.Width + screenWrapper.Bounds) * 0.5f && isMovingLeft;
                 screenWrapper.IsOffScreenRight = currentPosition.x > (screenInfo.Width + screenWrapper.Bounds) * 0.5f && isMovingRight;
                 screenWrapper.IsOffScreenBottom = currentPosition.y < - (screenInfo.Height + screenWrapper.Bounds) * 0.5f && isMovingDown;

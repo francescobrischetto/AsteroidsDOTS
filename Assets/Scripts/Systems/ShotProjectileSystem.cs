@@ -6,7 +6,7 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
-using static Systems.DestroyableSystem;
+using Utils;
 
 namespace Systems
 {
@@ -37,19 +37,21 @@ namespace Systems
             {
                 weaponData.FireTimer += deltaTime * weaponStats.FireRateMultiplier;
                 
+                //Firing is limited by Fire Rate 
                 if (!weaponData.IsShooting || weaponData.FireTimer < weaponStats.FireRate) return;
                 
                 weaponData.FireTimer = 0;
                 
                 for (int i = 0; i < weaponStats.NumProjectilesToSpawn; ++i)
                 {
+                    //If projectiles are more than 1 (eg. Trishots) we need to adjust
+                    //their position/rotation/direction accordingly, considering the angle between them
                     Entity newProjectile = ecb.Instantiate(entityInQueryIndex, weaponStats.ProjectileEntity);
                     int rotationMultiplier = (int)math.ceil(i / 2.0f);
                     rotationMultiplier = i % 2 == 0 ? -rotationMultiplier : rotationMultiplier;
                     quaternion projectileRotation = math.mul(rotation.Value, quaternion.Euler(0, 0, rotationMultiplier * weaponStats.AngleBetweenProjectiles));
                     Vector3 projectileDirection = math.mul(projectileRotation, weaponData.ShootDirection);
                     projectileDirection.Normalize();
-
 
                     ecb.SetComponent(entityInQueryIndex, newProjectile, new Translation { Value = translation.Value });
                     ecb.SetComponent(entityInQueryIndex, newProjectile, new Rotation { Value = projectileRotation});

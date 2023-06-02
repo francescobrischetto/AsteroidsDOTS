@@ -4,6 +4,7 @@ using Components.Tags;
 using System;
 using Unity.Entities;
 using Unity.Jobs;
+using Utils;
 
 namespace Systems
 {
@@ -37,9 +38,10 @@ namespace Systems
 
                 if (powerUpData.ElapsedTime < powerUpData.MaxTime)
                 {
+                    //If player still exists we need to give him powerups effects
                     if (playersEntities.HasComponent(powerUpData.TargetEntity))
                     {
-                        
+                        //Powerups effects
                         switch (powerUpStats.Type)
                         {
                             case PowerUpType.Invulnerable:
@@ -81,11 +83,13 @@ namespace Systems
                 else
                 {
                     ecb.DestroyEntity(entityInQueryIndex,entity);
+                    //If player still exists we need to remove from him powerups effects
                     if (playersEntities.HasComponent(powerUpData.TargetEntity))
                     {
                         eventTrigger.TriggerEvent(entityInQueryIndex);
                         switch (powerUpStats.Type)
                         {
+                            //Powerups effects reverted
                             case PowerUpType.Invulnerable:
                                 DestroyableDataComponent destroyableDataComponent = destroyableEntities[powerUpData.TargetEntity];
                                 ecb.SetComponent(powerUpData.TargetEntity.Index, powerUpData.TargetEntity, new DestroyableDataComponent()
