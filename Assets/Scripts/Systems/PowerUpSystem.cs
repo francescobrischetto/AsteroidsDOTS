@@ -1,7 +1,9 @@
 using Components.Data;
 using Components.Stats;
 using Components.Tags;
+using System;
 using Unity.Entities;
+using Unity.Jobs;
 
 namespace Systems
 {
@@ -9,22 +11,27 @@ namespace Systems
     public class PowerUpSystem : SystemBase
     {
         private EndSimulationEntityCommandBufferSystem _endSimulationECBS;
+        public event EventHandler OnPowerUpLost;
+        public struct OnPowerUpLostEvent : IComponentData { public int Value; }
 
+        private DOTSEvents_SameFrame<OnPowerUpLostEvent> dotsEvents;
         protected override void OnCreate()
         {
             base.OnCreate();
             _endSimulationECBS = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            dotsEvents = new DOTSEvents_SameFrame<OnPowerUpLostEvent>(World);
         }
         protected override void OnUpdate()
         {
             var deltaTime = Time.DeltaTime;
+            DOTSEvents_SameFrame<OnPowerUpLostEvent>.EventTrigger eventTrigger = dotsEvents.GetEventTrigger();
             var ecb = _endSimulationECBS.CreateCommandBuffer().AsParallelWriter();
             ComponentDataFromEntity<WeaponStatsComponent> weaponStatsEntities = GetComponentDataFromEntity<WeaponStatsComponent>(true);
             ComponentDataFromEntity<DestroyableDataComponent> destroyableEntities = GetComponentDataFromEntity<DestroyableDataComponent>(true);
             ComponentDataFromEntity<PlayerTagComponent> playersEntities = GetComponentDataFromEntity<PlayerTagComponent>(true);
 
 
-            Entities.ForEach((Entity entity, int entityInQueryIndex, ref PowerUpDataComponent powerUpData, ref PowerUpStatsComponent powerUpStats) =>
+            JobHandle jobHandle = Entities.ForEach((Entity entity, int entityInQueryIndex, ref PowerUpDataComponent powerUpData, ref PowerUpStatsComponent powerUpStats) =>
             {
                 powerUpData.ElapsedTime += deltaTime;
 
@@ -32,6 +39,7 @@ namespace Systems
                 {
                     if (playersEntities.HasComponent(powerUpData.TargetEntity))
                     {
+                        
                         switch (powerUpStats.Type)
                         {
                             case PowerUpType.Invulnerable:
@@ -75,6 +83,7 @@ namespace Systems
                     ecb.DestroyEntity(entityInQueryIndex,entity);
                     if (playersEntities.HasComponent(powerUpData.TargetEntity))
                     {
+                        eventTrigger.TriggerEvent(entityInQueryIndex);
                         switch (powerUpStats.Type)
                         {
                             case PowerUpType.Invulnerable:
@@ -113,8 +122,11 @@ namespace Systems
                     }
                 }
 
-            }).WithReadOnly(weaponStatsEntities).WithReadOnly(destroyableEntities).WithReadOnly(playersEntities).ScheduleParallel();
-
+            }).WithReadOnly(weaponStatsEntities).WithReadOnly(destroyableEntities).WithReadOnly(playersEntities).ScheduleParallel(Dependency);
+            dotsEvents.CaptureEvents(eventTrigger, jobHandle, (OnPowerUpLostEvent onPowerUpLostEvent) => {
+                OnPowerUpLost?.Invoke(this, EventArgs.Empty);
+            });
+            Dependency = JobHandle.CombineDependencies(jobHandle, Dependency);
             _endSimulationECBS.AddJobHandleForProducer(Dependency);
         }
     }

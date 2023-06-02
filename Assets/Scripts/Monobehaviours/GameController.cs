@@ -7,6 +7,7 @@ using UnityEngine;
 using Systems;
 using System.Collections;
 using Components.Stats;
+using System;
 
 namespace Monobehaviours
 {
@@ -27,16 +28,22 @@ namespace Monobehaviours
         public float AsteroidSpawnFrequency = 2f;
         public float UfoSpawnFrequency = 6f;
         public float PowerUpSpawnFrequency = 2f;
+        private Entity shipEntity;
+
         private void Awake()
         {
             _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<DestroyableSystem>().OnShipDestroyed += RespawnShip;
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<DestroyableSystem>().OnObjectDestroyed += OnObjectDestroyed;
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<ShotProjectileSystem>().OnShoot += OnShoot;
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<CollisionSystem>().OnPowerUpPicked += OnPowerUpPicked;
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem < PowerUpSystem > ().OnPowerUpLost += OnPowerUpLost;
         }
 
         private void Start()
         {
             _entityManager.CreateEntity(typeof(InputDataComponent));
-            Entity shipEntity = SpawnShipAtPosition(Vector3.zero);
+            shipEntity = SpawnShipAtPosition(Vector3.zero);
             GrantShipInvulnerability(shipEntity, 1.5f);
             SpawnAsteroid();
             
@@ -110,7 +117,7 @@ namespace Monobehaviours
 
             _entityManager.SetComponentData(LastPowerUpSpawned, new Translation()
             {
-                Value = new Vector3(Random.Range(-4f, 4f),Random.Range(-4f, 4f), 0)
+                Value = new Vector3(Random.Range(-5f, 5f),Random.Range(-4f, 4f), 0)
             });
         }
         
@@ -139,6 +146,11 @@ namespace Monobehaviours
                     SpawnPowerUp();
                 }
             }
+
+            if (Input.GetKeyUp(KeyCode.X))
+            {
+                HyperspaceTravel();
+            }
         }
 
         private Entity SpawnShipAtPosition(Vector3 spawnPosition)
@@ -154,6 +166,7 @@ namespace Monobehaviours
 
         private void RespawnShip(object sender, System.EventArgs e)
         {
+            SoundManager.PlaySound(SoundManager.Sound.LoseLife);
             StartCoroutine(SpawnShipAfterDelay(1));
         }
 
@@ -167,20 +180,51 @@ namespace Monobehaviours
             _entityManager.SetComponentData(powerUpEntity, new PowerUpDataComponent
             {
                 MaxTime = seconds,
+                ElapsedTime = 0,
                 TargetEntity = playerShip
             });
             _entityManager.SetComponentData(powerUpEntity, new PowerUpStatsComponent
             {
                 Type = PowerUpType.Invulnerable
             });
+            //OnPowerUpPicked(this, EventArgs.Empty);
 
         }
 
         private IEnumerator SpawnShipAfterDelay(float seconds)
         {
             yield return new WaitForSeconds(seconds);
-            Entity playerShip = SpawnShipAtPosition(Vector3.zero);
-            GrantShipInvulnerability(playerShip, 1.5f);
+            shipEntity = SpawnShipAtPosition(Vector3.zero);
+            GrantShipInvulnerability(shipEntity, 1.5f);
+        }
+
+        private void HyperspaceTravel()
+        {
+            if(_entityManager.Exists(shipEntity))
+            {
+                _entityManager.SetComponentData(shipEntity, new Translation
+                {
+                    Value = new Vector3(Random.Range(-6.6f, 6.6f), Random.Range(-4.9f, 4.9f), 0)
+                });
+                SoundManager.PlaySound(SoundManager.Sound.HyperSpaceTravel);
+            }
+        }
+
+        private void OnShoot(object sender, System.EventArgs e)
+        {
+            SoundManager.PlaySound(SoundManager.Sound.Shoot );
+        }
+        private void OnObjectDestroyed(object sender, System.EventArgs e)
+        {
+            SoundManager.PlaySound(SoundManager.Sound.ObjectDestroyed);
+        }
+        private void OnPowerUpPicked(object sender, System.EventArgs e)
+        {
+            SoundManager.PlaySound(SoundManager.Sound.PowerUpPicked);
+        }
+        private void OnPowerUpLost(object sender, System.EventArgs e)
+        {
+            SoundManager.PlaySound(SoundManager.Sound.PowerUpLost);
         }
     }
 }

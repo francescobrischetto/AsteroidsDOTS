@@ -1,9 +1,12 @@
 using Components.Data;
 using Components.Stats;
+using System;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
+using static Systems.DestroyableSystem;
 
 namespace Systems
 {
@@ -11,19 +14,25 @@ namespace Systems
     public class ShotProjectileSystem : SystemBase
     {
         private EndSimulationEntityCommandBufferSystem _endSimulationECBS;
-        
+        public event EventHandler OnShoot;
+        public struct OnShootEvent : IComponentData { public int Value; }
+
+        private DOTSEvents_NextFrame<OnShootEvent> dotsEvents;
+
         protected override void OnCreate()
         {
             base.OnCreate();
             _endSimulationECBS = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            dotsEvents = new DOTSEvents_NextFrame<OnShootEvent>(World);
         }
 
         protected override void OnUpdate()
         {
             var deltaTime = Time.DeltaTime;
+            DOTSEvents_NextFrame<OnShootEvent>.EventTrigger eventTrigger = dotsEvents.GetEventTrigger();
             var ecb = _endSimulationECBS.CreateCommandBuffer().AsParallelWriter();
 
-            Entities.ForEach((Entity entity, int entityInQueryIndex
+            JobHandle jobHandle = Entities.ForEach((Entity entity, int entityInQueryIndex
                 , ref WeaponDataComponent weaponData, in WeaponStatsComponent weaponStats, in MovementDataComponent movData, in Translation translation, in Rotation rotation) =>
             {
                 weaponData.FireTimer += deltaTime * weaponStats.FireRateMultiplier;
@@ -48,9 +57,15 @@ namespace Systems
                     {
                         CurrentVelocity = projectileDirection * weaponStats.ProjectileSpeed
                     });
+                    
                 }
-            }).ScheduleParallel();
-            
+                eventTrigger.TriggerEvent(entityInQueryIndex);
+
+            }).ScheduleParallel(Dependency);
+            dotsEvents.CaptureEvents(eventTrigger, jobHandle, (OnShootEvent onShootProjectileEvent) => {
+                OnShoot?.Invoke(this, EventArgs.Empty);
+            });
+            Dependency = JobHandle.CombineDependencies(jobHandle, Dependency);
             _endSimulationECBS.AddJobHandleForProducer(Dependency);
         }
     }

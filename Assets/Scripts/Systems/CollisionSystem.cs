@@ -18,6 +18,10 @@ namespace Systems
         private EndSimulationEntityCommandBufferSystem _endSimulationECBS;
         private EntityManager _entityManager;
         private EntityArchetype powerUpArchetype;
+        public event EventHandler OnPowerUpPicked;
+        public struct OnPowerUpPickedEvent : IComponentData { public int Value; }
+
+        private DOTSEvents_NextFrame<OnPowerUpPickedEvent> dotsEvents;
         protected override void OnCreate()
         {
             base.OnCreate();
@@ -29,6 +33,7 @@ namespace Systems
                 typeof(PowerUpDataComponent),
                 typeof(PowerUpStatsComponent)
             );
+            dotsEvents = new DOTSEvents_NextFrame<OnPowerUpPickedEvent>(World);
         }
 
         [BurstCompile]
@@ -40,6 +45,7 @@ namespace Systems
             public ComponentDataFromEntity<PowerUpStatsComponent> powerupsStats;
             public EntityCommandBuffer.ParallelWriter entityCommandBuffer;
             public EntityArchetype powerUpArchetype;
+            public DOTSEvents_NextFrame<OnPowerUpPickedEvent>.EventTrigger eventTrigger;
 
             public void Execute(TriggerEvent triggerEvent)
             {
@@ -97,12 +103,14 @@ namespace Systems
                 entityCommandBuffer.SetComponent(playerIndex, powerUpEntity, new PowerUpDataComponent
                 {
                     MaxTime = powerupsStats[pickablePowerUp].GrantedTime,
+                    ElapsedTime = 0,
                     TargetEntity = player
                 });
                 entityCommandBuffer.SetComponent(playerIndex, powerUpEntity, new PowerUpStatsComponent
                 {
                     Type = powerupsStats[pickablePowerUp].Type
                 });
+                eventTrigger.TriggerEvent(playerIndex);
             }
 
             public void ManageRegularDestroyableInteraction(TriggerEvent triggerEvent)
@@ -133,6 +141,7 @@ namespace Systems
             var powerupsComponents = GetComponentDataFromEntity<PowerUpTagComponent>();
             var powerupsStatsComponents = GetComponentDataFromEntity<PowerUpStatsComponent>();
             var ecb = _endSimulationECBS.CreateCommandBuffer().AsParallelWriter();
+            DOTSEvents_NextFrame<OnPowerUpPickedEvent>.EventTrigger eventTrigger = dotsEvents.GetEventTrigger();
 
             var job = new CollisionJob
             {
@@ -142,8 +151,13 @@ namespace Systems
                 powerupsStats = powerupsStatsComponents,
                 entityCommandBuffer = ecb,
                 powerUpArchetype = powerUpArchetype,
+                eventTrigger = eventTrigger
             };
             var jobHandle = job.Schedule(stepPhysicsWorld.Simulation, ref physicsWorld.PhysicsWorld, inputDeps);
+            dotsEvents.CaptureEvents(eventTrigger, jobHandle, (OnPowerUpPickedEvent onShipDestroyedEvent) => {
+                OnPowerUpPicked?.Invoke(this, EventArgs.Empty);
+            });
+            inputDeps = JobHandle.CombineDependencies(jobHandle, inputDeps);
             //jobHandle.Complete();
             _endSimulationECBS.AddJobHandleForProducer(inputDeps);
             return jobHandle;

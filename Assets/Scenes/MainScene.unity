@@ -730,9 +730,66 @@ Transform:
   - {fileID: 1933973931}
   - {fileID: 1249140334}
   - {fileID: 915205507}
+  - {fileID: 1112168994}
   m_Father: {fileID: 1516309560}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1112168993
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1112168994}
+  - component: {fileID: 1112168995}
+  m_Layer: 0
+  m_Name: SoundsPrefab
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1112168994
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1112168993}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 993720801}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1112168995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1112168993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6999a35a131176e48a4f6ddd14cd5d9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundAudioClipArray:
+  - sound: 0
+    audioClip: {fileID: 8300000, guid: cc43572a528236a4e93bb1dea1d6b017, type: 3}
+  - sound: 1
+    audioClip: {fileID: 8300000, guid: ccd4401f876e1b44a95a5574e3e71c27, type: 3}
+  - sound: 2
+    audioClip: {fileID: 8300000, guid: c41d041399a257f4599cd183fd5d47b8, type: 3}
+  - sound: 3
+    audioClip: {fileID: 8300000, guid: 0afffc2caa9b27845b1125833a8a8385, type: 3}
+  - sound: 4
+    audioClip: {fileID: 8300000, guid: 0eab746c3c1d663408e13f1311f0b964, type: 3}
+  - sound: 5
+    audioClip: {fileID: 8300000, guid: 287714c74120797488f2baa3f148324a, type: 3}
 --- !u!1 &1117339599
 GameObject:
   m_ObjectHideFlags: 0
@@ -1265,7 +1322,7 @@ MonoBehaviour:
   - {fileID: 1133367715}
   - {fileID: 1864990596}
   - {fileID: 1616365190}
-  AsteroidSpawnFrequency: 7
+  AsteroidSpawnFrequency: 9
   UfoSpawnFrequency: 15
   PowerUpSpawnFrequency: 10
 --- !u!4 &2090029900
