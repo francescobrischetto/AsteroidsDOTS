@@ -11,3 +11,14 @@ The input actions available for the prototype are:
 |Hyperspace Travel |`X`|
 
 Please refer to the documentation (use .md or .pdf extensions at your convenience) to read about design decisions and implementation details.
+## Game Screenshots
+
+**Double Fire Rate powerup**
+
+<img src="./Images/DoubleFireRate.jpg"  width="500">
+
+**Triple Shot powerup**
+
+<img src="./Images/TripleShot.jpg"  width="500">
+
+
