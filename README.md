@@ -10,6 +10,8 @@ The input actions available for the prototype are:
 |Shoot|`Space` |
 |Hyperspace Travel |`X`|
 
+The game runs on a 16:9 aspect, so please use it in the editor.
+
 Please refer to the documentation (use .md or .pdf extensions at your convenience) to read about design decisions and implementation details.
 ## Game Screenshots
 
